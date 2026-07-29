@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Pakan Kandang - IoT Kandang Cerdas</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body {
+            min-height: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: margin-left 0.3s ease;
+        }
+
+        .page-inner {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 1.5rem;
+            padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-iframe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            height: 100dvh;
+            border: none;
+            z-index: 1000;
+        }
+
+        #kandangContent {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #kandangSelect {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        #kandangSelect option {
+            padding: 8px 12px;
+        }
+
+        .layout-grid {
+            display: block;
+        }
+
+        .mobile-header { display: none; }
+
+        @media (max-width: 1024px) {
+            html, body {
+                height: 100%;
+                overflow: hidden;
+            }
+            body { overflow: hidden; }
+            .main-content {
+                margin-left: 0;
+                height: 100vh;
+                height: 100dvh;
+                min-height: 0;
+                overflow: hidden;
+            }
+            .page-inner {
+                flex: 1;
+                min-height: 0;              /* tambah */
+                overflow: hidden;            /* ganti dari overflow-y: auto */
+                -webkit-overflow-scrolling: touch;
+                padding: 1.5rem;
+                padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 20px));
+                display: flex;               /* tambah */
+                flex-direction: column;      /* tambah */
+            }
+
+            .mobile-header {
+                display: flex;
+                position: sticky;
+                top: 0;
+                z-index: 20;
+                background: white;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                padding: 12px 16px;
+                align-items: center;
+                justify-content: space-between;
+                flex-shrink: 0;
+            }
+            .mobile-menu-btn {
+                background: #f3f4f6;
+                padding: 8px 12px;
+                border-radius: 10px;
+                cursor: pointer;
+                border: none;
+            }
+            .mobile-menu-btn i { color: #d97706; font-size: 18px; }
+            .sidebar-iframe {
+                display: none;
+                left: 0;
+                width: 100%;
+                max-width: 260px;
+            }
+            .sidebar-iframe.mobile-open { display: block; }
+            body.sidebar-open { overflow: hidden; }
+        }
+
+        .stat-card { transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1); }
+
+        .kandang-tab { transition: all 0.2s ease; cursor: pointer; }
+        .kandang-tab.active { background-color: #d97706 !important; color: white !important; border-color: #d97706 !important; }
+        .kandang-tab:not(.active):hover { background-color: #fef3c7; border-color: #fcd34d; }
+
+        .feed-stat {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .feed-stat .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .feed-stat .icon.orange { background: #fef3c7; color: #d97706; }
+        .feed-stat .icon.green { background: #d1fae5; color: #059669; }
+        .feed-stat .icon.blue { background: #dbeafe; color: #2563eb; }
+        .feed-stat .icon.purple { background: #ede9fe; color: #7c3aed; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .status-badge.success { background: #d1fae5; color: #065f46; }
+        .status-badge.warning { background: #fef3c7; color: #92400e; }
+        .status-badge.danger { background: #fee2e2; color: #991b1b; }
+        .status-badge.info { background: #dbeafe; color: #1e40af; }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .schedule-item:last-child { border-bottom: none; }
+
+        .confirm-btn { transition: all 0.3s ease; }
+        .confirm-btn:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3); }
+        
+        /* LED Status Indicator */
+        .led-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            animation: ledBlink 2.5s ease-in-out infinite;
+        }
+
+        .led-green {
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .led-yellow {
+            background: #f59e0b;
+            box-shadow: 0 0 10px #f59e0b;
+        }
+
+        .led-red {
+            background: #ef4444;
+            box-shadow: 0 0 10px #ef4444;
+        }
+
+        @keyframes ledBlink {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.35;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        /* Toast Animation */
+        .toast-enter {
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <iframe src="sidebar.html" class="sidebar-iframe" id="sidebarIframe"></iframe>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-microchip text-amber-600 text-lg"></i>
+                <span class="font-semibold text-gray-700 text-sm">IoT Kandang</span>
+            </div>
+            <div class="w-8"></div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="page-inner">
+            <!-- Header -->
+            <div class="mb-6 flex items-center justify-between">
+                <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-bowl-food text-amber-300"></i>
+                    Monitoring Pakan Kandang
+                </h1>
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <i class="fa-regular fa-clock text-amber-500"></i>
+                    <span id="jamHeaderDisplay">00.00.00</span>
+                </div>
+            </div>
+
+            <!-- Kandang Selector -->
+            <div class="bg-white rounded-2xl shadow-sm p-3 mb-4">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-house-chimney text-amber-500 text-sm"></i>
+                    <select id="kandangSelect" 
+                            class="flex-1 border-0 bg-gray-50 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700 focus:ring-2 focus:ring-amber-400 focus:bg-white outline-none transition appearance-none cursor-pointer" 
+                            style="background-image: url(&quot;data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23d97706' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e&quot;); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 36px;">
+                        <option value="" disabled selected>Pilih Kandang</option>
+                    </select>
+                    <span class="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-full" id="kandangCount">0</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Content Container -->
+            <div id="kandangContent" class="layout-grid flex-1"></div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40 p-4 overflow-y-auto">
+        <div class="w-full max-w-lg rounded-3xl bg-white shadow-2xl overflow-hidden fade-in">
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-gray-800">
+                    <i class="fa-solid fa-floppy-disk text-amber-500 mr-2"></i>
+                    Simpan pengaturan pakan?
+                </h2>
+                <div class="mt-5 grid gap-4">
+                    <div class="rounded-2xl bg-gray-50 p-4 border border-gray-200">
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">Kandang</p>
+                        <p class="text-base font-semibold text-gray-800" id="confirmModalKandang">-</p>
+                        <p class="text-xs text-gray-500 mt-1" id="confirmModalDetails">-</p>
+                    </div>
+                    <div class="rounded-2xl bg-amber-50 p-4 border border-amber-200">
+                        <p class="text-xs text-amber-600 flex items-center gap-1">
+                            <i class="fa-solid fa-circle-info"></i>
+                            Pengaturan akan dikirim ke mikrokontroler melalui MQTT
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-3 border-t border-gray-100 bg-gray-50 px-6 py-4">
+                <button id="confirmModalCancel" 
+                        class="rounded-xl border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">
+                    Batal
+                </button>
+                <button id="confirmModalConfirm" 
+                        class="rounded-xl bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600 transition flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript -->
+    <script src="pakan-data.js"></script>
+    <script src="pakan-main.js"></script>
+
+</body>
+</html>

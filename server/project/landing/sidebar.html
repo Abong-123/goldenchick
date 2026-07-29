@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Component</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
+        
+        .sidebar-wrapper {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .iot-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            height: 100dvh;
+            background: linear-gradient(to bottom, #d97706, #ea580c);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .iot-sidebar::-webkit-scrollbar {
+            width: 3px;
+        }
+        
+        .iot-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .iot-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 12px;
+            padding-top: calc(16px + env(safe-area-inset-top));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            gap: 6px;
+            min-height: 72px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .sidebar-logo img {
+            width: 40px;
+            height: 40px;
+            max-width: 100%;
+            object-fit: contain;
+            display: block;
+            margin: 0;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo h2 {
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-logo p {
+            color: #fde68a;
+            font-size: 11px;
+            margin-top: 0;
+            opacity: 0.95;
+            white-space: normal;
+            text-align: center;
+        }
+
+        @media (max-width: 420px) {
+            .sidebar-logo img { width: 36px; height: 36px; }
+            .sidebar-logo h2 { font-size: 14px; }
+            .sidebar-logo p { font-size: 10px; }
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 24px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            min-height: 0;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: #fde68a;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 44px;
+        }
+        
+        .sidebar-nav a i {
+            width: 20px;
+            font-size: 14px;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+        
+        .sidebar-nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-left: 3px solid white;
+            color: white;
+        }
+        
+        .sidebar-footer {
+            padding: 16px;
+            padding-bottom: calc(16px + env(safe-area-inset-bottom));
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+        
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 46px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        
+        .logout-btn:hover,
+        .logout-btn:active {
+            background: #dc2626;
+        }
+        
+        .version-text {
+            text-align: center;
+            color: #fde68a;
+            font-size: 10px;
+            margin-top: 12px;
+        }
+        
+        .iot-sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+        
+        .iot-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 999;
+            display: none;
+        }
+        
+        .sidebar-overlay.show {
+            display: block;
+        }
+        
+        .mobile-toggle-btn {
+            display: none;
+            position: fixed;
+            top: calc(12px + env(safe-area-inset-top));
+            left: 12px;
+            z-index: 1001;
+            background: white;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+        }
+        
+        .mobile-toggle-btn i {
+            color: #d97706;
+            font-size: 18px;
+        }
+        
+        .mobile-mode .mobile-toggle-btn {
+            display: block;
+        }
+        
+        /* Di mode mobile, tombol logout dinaikkan sedikit dari tepi bawah
+           agar tidak mepet dengan home indicator / navigation bar HP */
+        .mobile-mode .iot-sidebar .sidebar-footer {
+            padding-bottom: calc(28px + env(safe-area-inset-bottom));
+        }
+        
+        @media (max-width: 1024px) {
+            .iot-sidebar {
+                width: 80%;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .iot-sidebar {
+                width: 85%;
+            }
+            .sidebar-nav {
+                padding: 16px 10px;
+            }
+            .logout-btn {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<button class="mobile-toggle-btn" id="mobileToggleBtn">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="iot-sidebar" id="iotSidebar">
+    <div class="sidebar-logo">
+        <div>
+            <img src="./assets/img/logo.png" alt="">
+            <h2>Golden Chick</h2>
+            <p>Sistem Pengatur Kandang & pemberi Pakan</p>
+        </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <a href="/dashboard" data-page="welcome" id="navWelcome">
+            <i class="fa-solid fa-house"></i>
+            <span>Beranda</span>
+        </a>
+        <a href="/suhu" data-page="suhu" id="navSuhu">
+            <i class="fa-solid fa-temperature-high"></i>
+            <span>Suhu Kandang</span>
+        </a>
+        <a href="/feeder" data-page="pakan" id="navPakan">
+            <i class="fa-solid fa-bowl-food"></i>
+            <span>Monitoring Pakan</span>
+        </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <button class="logout-btn" id="logoutBtn">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Keluar</span>
+        </button>
+        <div class="version-text">
+            <i class="fa-solid fa-microchip"></i> v2.0
+        </div>
+    </div>
+</aside>
+
+<script>
+    // ========== ELEMENTS ==========
+    const sidebar = document.getElementById('iotSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const toggleBtn = document.getElementById('mobileToggleBtn');
+    
+    // ========== FUNGSI BUKA/TUTUP SIDEBAR ==========
+    function openSidebar() {
+        sidebar.classList.add('open');
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+    
+    function toggleSidebar() {
+        if (sidebar.classList.contains('open')) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    }
+    
+    function isMobileMode() {
+        if (window.parent && window.parent !== window) {
+            const parentWidth = window.parent.innerWidth || window.parent.document.documentElement.clientWidth || 0;
+            return parentWidth <= 1024;
+        }
+        return window.innerWidth <= 1024;
+    }
+    
+    function applyResponsiveMode() {
+        if (isMobileMode()) {
+            document.body.classList.add('mobile-mode');
+            sidebar.classList.add('mobile-hidden');
+            closeSidebar();
+        } else {
+            document.body.classList.remove('mobile-mode');
+            sidebar.classList.remove('mobile-hidden');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    }
+    
+    // Tombol toggle di sidebar (untuk mobile di dalam iframe)
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleSidebar();
+        });
+    }
+    
+    // Overlay klik -> tutup
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+    }
+    
+    window.addEventListener('resize', applyResponsiveMode);
+    
+    // ========== KOMUNIKASI DENGAN HALAMAN INDUK (DASHBOARD) ==========
+    // Fungsi mengirim event ke parent
+    function sendToParent(type, data = {}) {
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: type, ...data }, '*');
+        }
+    }
+    
+    // Navigasi menu
+    const navWelcome = document.getElementById('navWelcome');
+    const navSuhu = document.getElementById('navSuhu');
+    const navPakan = document.getElementById('navPakan');
+    const logoutBtnSidebar = document.getElementById('logoutBtn');
+    
+    if (navWelcome) {
+        navWelcome.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeSidebar();
+            sendToParent('navigate', { page: 'welcome' });
+        });
+    }
+    
+    if (navSuhu) {
+        navSuhu.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeSidebar();
+            sendToParent('navigate', { page: 'suhu' });
+        });
+    }
+    
+    if (navPakan) {
+        navPakan.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeSidebar();
+            sendToParent('navigate', { page: 'pakan' });
+        });
+    }
+    
+    if (logoutBtnSidebar) {
+        logoutBtnSidebar.addEventListener('click', async function() {
+            closeSidebar();
+            try {
+                await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+            } catch (_) {}
+            sessionStorage.removeItem('user');
+            window.top.location.href = '/login';
+        });
+    }
+    
+    // ========== MENERIMA PESAN DARI HALAMAN INDUK ==========
+    window.addEventListener('message', function(event) {
+        const data = event.data;
+        
+        // Toggle sidebar dari halaman induk (dashboard)
+        if (data && data.type === 'toggleSidebar') {
+            toggleSidebar();
+        }
+        
+        if (data && data.type === 'parentResize') {
+            applyResponsiveMode();
+        }
+        
+        // Set active menu dari halaman induk
+        if (data && data.type === 'setActive' && data.page) {
+            const navWelcomeEl = document.getElementById('navWelcome');
+            const navSuhuEl = document.getElementById('navSuhu');
+            const navPakanEl = document.getElementById('navPakan');
+            
+            if (navWelcomeEl) navWelcomeEl.classList.remove('active');
+            if (navSuhuEl) navSuhuEl.classList.remove('active');
+            if (navPakanEl) navPakanEl.classList.remove('active');
+            
+            if (data.page === 'welcome' && navWelcomeEl) navWelcomeEl.classList.add('active');
+            if (data.page === 'suhu' && navSuhuEl) navSuhuEl.classList.add('active');
+            if (data.page === 'pakan' && navPakanEl) navPakanEl.classList.add('active');
+        }
+    });
+    
+    // Pastikan mode responsif sudah diatur saat iframe mulai
+    applyResponsiveMode();
+    
+    // Beri tahu parent bahwa sidebar sudah siap
+    sendToParent('sidebarReady', {});
+</script>
+
+</body>
+</html>

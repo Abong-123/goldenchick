@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Beranda - IoT Kandang Cerdas</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        .sidebar-iframe {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            border: none;
+            z-index: 1000;
+        }
+        
+        .mobile-header {
+            display: none;
+        }
+        
+        @media (max-width: 1024px) {
+            .mobile-header {
+                display: flex;
+                position: sticky;
+                top: 0;
+                z-index: 20;
+                background: white;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                padding: 12px 16px;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .mobile-menu-btn {
+                background: #f3f4f6;
+                padding: 8px 12px;
+                border-radius: 10px;
+                cursor: pointer;
+                border: none;
+            }
+            .mobile-menu-btn i {
+                color: #d97706;
+                font-size: 18px;
+            }
+            .sidebar-iframe {
+                display: none;
+                left: 0;
+                width: 100%;
+                max-width: 260px;
+            }
+            .sidebar-iframe.mobile-open {
+                display: block;
+            }
+            body.sidebar-open {
+                overflow: hidden;
+            }
+        }
+        
+        .guide-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .guide-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.15);
+        }
+        
+        .modal-content {
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Token card shimmer saat none */
+        .token-none {
+            opacity: 0.6;
+            font-style: italic;
+            letter-spacing: normal;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<iframe src="sidebar.html" class="sidebar-iframe" id="sidebarIframe"></iframe>
+
+<main class="main-content">
+    
+    <div class="mobile-header">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-microchip text-amber-600 text-lg"></i>
+            <span class="font-semibold text-gray-700 text-sm">IoT Kandang</span>
+        </div>
+        <div class="w-8"></div>
+    </div>
+    
+    <div class="p-4 sm:p-6 md:p-8">
+        
+        <!-- Hero Dashboard -->
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-4 mb-4">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+
+                <!-- Kiri: Identitas App -->
+                <div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-microchip text-amber-600 text-2xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">Golden Chick</h1>
+                            <p class="text-gray-500 mt-1 text-sm">
+                                Monitoring suhu kandang dan kontrol pemberian pakan terjadwal berbasis Internet of Things.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kanan: Token Card -->
+                <div class="bg-gradient-to-r from-sky-500 to-blue-600 rounded-2xl p-4 text-white min-w-[260px]">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <p class="text-sm opacity-90">Kode Akses Telegram</p>
+
+                            <!-- Token: diisi JS, fallback "none" -->
+                            <h2 class="text-2xl font-bold tracking-wider mt-2" id="telegramToken">
+                                —
+                            </h2>
+
+                            <p class="text-xs opacity-80 mt-2" id="tokenSubtext">
+                                Memuat token...
+                            </p>
+
+                            <button
+                                id="copyBtn"
+                                onclick="copyTelegramCode()"
+                                class="mt-4 bg-white text-blue-600 px-4 py-2 rounded-xl text-sm font-semibold transition hover:bg-blue-50 disabled:opacity-50">
+                                <i class="fa-regular fa-copy"></i>
+                                Salin Kode
+                            </button>
+                        </div>
+
+                        <!-- Telegram Bot Link -->
+                        <a href="https://t.me/GoldenChickk_bot"
+                            target="_blank"
+                            title="Buka Bot Telegram"
+                            class="ml-4 mt-1">
+                            <i class="fa-brands fa-telegram text-4xl hover:scale-110 transition duration-300 cursor-pointer"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- 3 Kartu Panduan -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            <!-- Login -->
+            <div class="guide-card bg-gradient-to-br from-blue-50 to-white rounded-2xl p-4 border border-blue-100 shadow-sm hover:shadow-lg"
+                data-guide="login">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider text-blue-600">Panduan</span>
+                        <h3 class="text-lg font-bold text-gray-800 mt-1">Login & Akun</h3>
+                        <p class="text-xs text-gray-500 mt-1">Kelola akses pengguna.</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                        <i class="fa-solid fa-right-to-bracket text-blue-600 text-lg"></i>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <span class="px-2 py-1 bg-white border rounded-full text-[11px]">Login</span>
+                    <span class="px-2 py-1 bg-white border rounded-full text-[11px]">Password</span>
+                    <span class="px-2 py-1 bg-white border rounded-full text-[11px]">Registrasi</span>
+                </div>
+                <div class="mt-3 flex items-center text-blue-600 font-medium text-xs">
+                    Buka Panduan <i class="fa-solid fa-arrow-right ml-2"></i>
+                </div>
+            </div>
+
+            <!-- Suhu -->
+            <div class="guide-card bg-gradient-to-br from-orange-50 to-white rounded-2xl p-4 border border-orange-100 shadow-sm hover:shadow-lg"
+                data-guide="suhu">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider text-orange-600">Monitoring</span>
+                        <h3 class="text-lg font-bold text-gray-800 mt-1">Pengaturan Suhu</h3>
+                        <p class="text-xs text-gray-500 mt-1">Suhu ideal ayam.</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
+                        <i class="fa-solid fa-temperature-high text-orange-600 text-lg"></i>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <span class="px-2 py-1 bg-white border rounded-full text-[11px]">DOC</span>
+                    <span class="px-2 py-1 bg-white border rounded-full text-[11px]">Grower</span>
+                    <span class="px-2 py-1 bg-white border rounded-full text-[11px]">Layer</span>
+                </div>
+                <div class="mt-3 flex items-center text-orange-600 font-medium text-xs">
+                    Buka Panduan <i class="fa-solid fa-arrow-right ml-2"></i>
+                </div>
+            </div>
+
+            <!-- Pakan -->
+            <div class="guide-card bg-gradient-to-br from-green-50 to-white rounded-2xl p-4 border border-green-100 shadow-sm hover:shadow-lg"
+                data-guide="pakan">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-[11px] font-semibold uppercase tracking-wider text-green-600">Otomatisasi</span>
+                        <h3 class="text-lg font-bold text-gray-800 mt-1">Pemberian Pakan</h3>
+                        <p class="text-xs text-gray-500 mt-1">Jadwal pakan otomatis.</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+                        <i class="fa-solid fa-bowl-food text-green-600 text-lg"></i>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <span class="px-2 py-1 bg-white border rounded-full text-[11px]">Jadwal</span>
+                    <span class="px-2 py-1 bg-white border rounded-full text-[11px]">Jenis</span>
+                </div>
+                <div class="mt-3 flex items-center text-green-600 font-medium text-xs">
+                    Buka Panduan <i class="fa-solid fa-arrow-right ml-2"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
+            <div class="flex items-start gap-3">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-lg mt-0.5"></i>
+                <div>
+                    <p class="text-xs font-semibold text-amber-700">💡 Tips Hari Ini</p>
+                    <p class="text-xs text-gray-600 mt-0.5">Pastikan suhu kandang stabil untuk DOC usia 1–2 minggu.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buku Panduan -->
+        <div class="mt-4 text-center">
+            <a href="panduan.pdf" target="_blank" rel="noopener"
+               class="text-amber-600 font-semibold text-sm hover:underline">
+                📖 Buku Panduan
+            </a>
+        </div>
+        
+    </div>
+</main>
+
+<!-- Modal Panduan -->
+<div id="guideModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4"
+    style="background: rgba(0,0,0,0.5); backdrop-filter: blur(3px);"
+    onclick="closeGuideModal(event)">
+    <div class="modal-content bg-white rounded-2xl max-w-md w-full max-h-[85vh] overflow-hidden shadow-2xl"
+        onclick="event.stopPropagation()">
+        <div class="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
+            <h3 class="font-bold text-gray-800" id="modalTitle">Panduan</h3>
+            <button onclick="closeGuideModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="overflow-y-auto p-4" id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+    // =====================
+    // SESSION & TOKEN
+    // =====================
+    const userSession = JSON.parse(sessionStorage.getItem('user') || '{}')
+    const userToken   = userSession.token ?? null
+
+    // Isi token ke card Telegram
+    const tokenEl    = document.getElementById('telegramToken')
+    const subtextEl  = document.getElementById('tokenSubtext')
+    const copyBtn    = document.getElementById('copyBtn')
+
+    if (userToken) {
+        tokenEl.innerText   = userToken
+        tokenEl.classList.remove('token-none')
+        subtextEl.innerText = 'Gunakan kode ini untuk login dan menghubungkan akun Telegram.'
+    } else {
+        tokenEl.innerText   = 'none'
+        tokenEl.classList.add('token-none')
+        subtextEl.innerText = 'Token belum ditetapkan. Hubungi admin untuk mendapatkan token.'
+        copyBtn.setAttribute('disabled', 'true')
+        copyBtn.classList.add('opacity-50', 'cursor-not-allowed')
+    }
+
+    // =====================
+    // SIDEBAR
+    // =====================
+    const sidebarIframe = document.getElementById('sidebarIframe')
+
+    function sendToSidebar(type, data = {}) {
+        if (sidebarIframe?.contentWindow) {
+            sidebarIframe.contentWindow.postMessage({ type, ...data }, '*')
+        }
+    }
+
+    function toggleMobileSidebar() {
+        const isOpen = sidebarIframe?.classList.contains('mobile-open')
+        if (isOpen) {
+            sidebarIframe.classList.remove('mobile-open')
+            document.body.classList.remove('sidebar-open')
+        } else {
+            sidebarIframe.classList.add('mobile-open')
+            document.body.classList.add('sidebar-open')
+        }
+    }
+
+    document.getElementById('mobileMenuBtn')?.addEventListener('click', (e) => {
+        e.stopPropagation()
+        toggleMobileSidebar()
+    })
+
+    document.addEventListener('click', (e) => {
+        const mobileMenuBtn       = document.getElementById('mobileMenuBtn')
+        const isClickInsideSidebar = sidebarIframe?.contains(e.target)
+        const isClickOnButton      = mobileMenuBtn?.contains(e.target)
+        if (!isClickInsideSidebar && !isClickOnButton && sidebarIframe?.classList.contains('mobile-open')) {
+            sidebarIframe.classList.remove('mobile-open')
+            document.body.classList.remove('sidebar-open')
+        }
+    })
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 1024) {
+            sidebarIframe?.classList.remove('mobile-open')
+            document.body.classList.remove('sidebar-open')
+        }
+    })
+
+    window.addEventListener('message', (event) => {
+        const data = event.data
+        if (data?.type === 'navigate') {
+            if (data.page === 'suhu')    window.location.href = '/suhu'
+            if (data.page === 'pakan')   window.location.href = '/feeder'
+            if (data.page === 'welcome') window.location.href = '/dashboard'
+        }
+        if (data?.type === 'logout') {
+            if (confirm('Yakin ingin keluar?')) window.location.href = '/login'
+        }
+    })
+
+    sendToSidebar('setActive', { page: 'welcome' })
+
+    // =====================
+    // SALIN TOKEN
+    // =====================
+    function copyTelegramCode() {
+        const token = document.getElementById('telegramToken')?.innerText?.trim()
+
+        if (!token || token === 'none' || token === '—') {
+            alert('Token belum tersedia. Hubungi admin untuk mendapatkan token.')
+            return
+        }
+
+        const btn = document.getElementById('copyBtn')
+
+        // Coba clipboard API dulu (butuh HTTPS)
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(token).then(() => {
+                showCopied(btn)
+            }).catch(() => {
+                fallbackCopy(token, btn)
+            })
+        } else {
+            // Fallback untuk HTTP
+            fallbackCopy(token, btn)
+        }
+    }
+
+    function fallbackCopy(text, btn) {
+        const textarea = document.createElement('textarea')
+        textarea.value = text
+        textarea.style.position = 'fixed'
+        textarea.style.opacity  = '0'
+        document.body.appendChild(textarea)
+        textarea.focus()
+        textarea.select()
+        try {
+            document.execCommand('copy')
+            showCopied(btn)
+        } catch {
+            alert('Gagal menyalin otomatis. Salin manual: ' + text)
+        }
+        document.body.removeChild(textarea)
+    }
+
+    function showCopied(btn) {
+        btn.innerHTML = `<i class="fa-solid fa-check"></i> Tersalin`
+        setTimeout(() => {
+            btn.innerHTML = `<i class="fa-regular fa-copy"></i> Salin Kode`
+        }, 2000)
+    }
+
+    // =====================
+    // MODAL PANDUAN
+    // =====================
+    const guideContent = {
+        login: {
+            title: '🔐 Panduan Login & Akun',
+            items: [
+                '📝 Cara Login: Buka login, masukkan username & password',
+                '🔑 Lupa Password: Klik tautan "Lupa Password?" di halaman login, masukkan username dan email terdaftar.',
+                '👤 Daftar Akun: Isi form registrasi sesuai yang diminta',
+                '❌ Kehilangan Akun: Hubungi admin via email'
+            ]
+        },
+        suhu: {
+            title: '🌡️ Panduan Pengaturan Suhu',
+            items: [
+                '🐔 Jenis Ayam: Tersedia pilihan jenis ayam Broiler, Layer, Kampung.',
+                '📈 Fase Ayam: Tersedia dua fase pilihan, DOC & Groower',
+                '⚙️ Atur Suhu: Buka menu Suhu → pilih jenis ayam dan fase usia → atur min & max suhu → terapkan'
+            ]
+        },
+        pakan: {
+            title: '🍽️ Panduan Pemberian Pakan',
+            items: [
+                '⏰ Jadwal Pakan: Atur jadwal pagi, siang, sore, dan malam sesuai kebutuhan kandang.',
+                '🍚 Jenis Pakan: Tersedia pilihan Pelet, Jagung, dan Mix.',
+                '⚖️ Takaran: Atur takaran sesuai kebutuhan',
+                '🔄 Otomatisasi: Feeder akan berjalan otomatis sesuai jadwal yang sudah dikonfigurasi.'
+            ]
+        }
+    }
+
+    function openGuideModal(topic) {
+        const data = guideContent[topic]
+        if (!data) return
+
+        document.getElementById('modalTitle').innerHTML = data.title
+
+        let html = '<div class="space-y-3">'
+        data.items.forEach((item, i) => {
+            const preview = item.length > 45 ? item.substring(0, 45) + '...' : item
+            html += `
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button onclick="toggleItem(${i})"
+                        class="w-full text-left p-3 bg-gray-50 hover:bg-amber-50 flex justify-between items-center transition gap-2">
+                        <span class="text-sm text-gray-700">${preview}</span>
+                        <i id="icon${i}" class="fa-solid fa-chevron-down text-gray-400 flex-shrink-0 transition-transform duration-200"></i>
+                    </button>
+                    <div id="item${i}" class="hidden p-3 text-xs text-gray-600 border-t border-gray-100 leading-relaxed">
+                        ${item}
+                    </div>
+                </div>`
+        })
+        html += '</div>'
+
+        document.getElementById('modalContent').innerHTML = html
+        document.getElementById('guideModal').classList.remove('hidden')
+        document.getElementById('guideModal').classList.add('flex')
+    }
+
+    window.toggleItem = function(i) {
+        const el   = document.getElementById(`item${i}`)
+        const icon = document.getElementById(`icon${i}`)
+        const isHidden = el.classList.contains('hidden')
+        el.classList.toggle('hidden', !isHidden)
+        icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)'
+    }
+
+    function closeGuideModal(e) {
+        if (e && e.target !== e.currentTarget) return
+        document.getElementById('guideModal').classList.remove('flex')
+        document.getElementById('guideModal').classList.add('hidden')
+    }
+
+    document.querySelectorAll('.guide-card').forEach(card => {
+        card.addEventListener('click', () => openGuideModal(card.getAttribute('data-guide')))
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!doctype html>
+<html>
+<head>
+    <script>
+      const BASE_URL = window.location.origin;
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--~~~~~~~~~~~~~~~ Favicon ~~~~~~~~~~~~~~~-->
+    <link rel="shortcut icon" href="assets/img/icon ayam.ico" type="image/x-icon">
+
+    <!--~~~~~~~~~~~~~~~ Remix Icon ~~~~~~~~~~~~~~~-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css"  />
+
+    <!--~~~~~~~~~~~~~~~ Swiper's CSS ~~~~~~~~~~~~~~~-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
+    />
+
+    <link rel="stylesheet" href="./output.css?v=2">
+    <title>Goldenchick | Sistem Peternakan Ayam Berbasis IoT </title>
+</head>
+
+<body>
+    <!--~~~~~~~~~~~~~~~ Header ~~~~~~~~~~~~~~~-->
+    <header id="navbar" class="bg-yellow-600 fixed w-full top-0 left-0 z-50">
+        <nav class="container flex items-center justify-between h-16 sm:h-20">
+          <a href="#home" class="flex items-center gap-2 mr-4" aria-label="Home - Goldenchick">
+            <img src="./assets/img/home.png" alt="Goldenchick" class="block h-12 w-auto sm:h-14 md:h-16 lg:h-20 object-contain cursor-pointer">
+            <span class="sr-only">Goldenchick</span>
+          </a>
+
+        <div id="nav-menu" class="absolute top-0 -left-[-100%] min-h-[80vh] w-full bg-yellow-600/80 backdrop-blur-sm 
+        flex items-center justify-center duration-300 overflow-hidden 
+        lg:static lg:min-h-fit lg:w-auto lg:bg-transparent">
+            <ul class="flex flex-col items-center gap-8 lg:flex-row">
+              <li>
+                <a href="#home" class="nav-link active">Home</a>
+              </li>
+
+              <li>
+                <a href="#about" class="nav-link">About</a>
+              </li>
+
+              <li>
+                <a href="#features" class="nav-link">features</a>
+              </li>
+            </ul>
+
+            <div class="absolute bottom-0 -right-10 opacity-90 lg:hidden">
+              <img src="assets/img/Ayam DOC2.png" alt="ayam DOC_image" class="w-32">
+            </div>
+
+            
+            <div class="absolute -top-5 -left-5 rotate-60 opacity-90 lg:hidden">
+              <img src="assets/img/Ayam Grower2.png" alt="ayam Grower_image" class="w-32">
+            </div>
+          </div>
+
+          <div class="text-xl sm:text-3xl cursor-pointer z-50 lg:hidden">
+            <i class="ri-menu-4-line" id="hamburger"></i>
+          </div>
+        </nav>
+    </header>
+
+    <main>
+        <!--~~~~~~~~~~~~~~~ Home ~~~~~~~~~~~~~~~-->
+        <section id="home" class="relative">
+          <div class="container">
+            <!--~~~~~~~~~~~~~~~ blob 1 ~~~~~~~~~~~~~~~-->
+            <div class="w-64 h-64 bg-yellow-300 rounded-full blur-3xl -z-10 opacity-40 absolute top-1/2 left-1/2
+            transform -translate-x-1/2 -translate-y-1/2">
+          </div>
+
+          <!--~~~~~~~~~~~~~~~ blob 1 ~~~~~~~~~~~~~~~-->
+            <div class="w-64 h-64 bg-yellow-300 rounded-full blur-3xl -z-10 opacity-40 absolute right-0 bottom-0">
+          </div>
+
+            <div class="flex flex-col items-center gap-5 lg:flex-row">
+
+              <!--~~~~~~~~~~~~~~~ Content ~~~~~~~~~~~~~~~-->
+
+              <div class="home_data w-full space-y-5 lg:w-1/2">
+                <h1>
+                  Sistem Pintar <br>
+                  <span class="text-amber-950">Peternakan Ayam</span> <br>
+                  Berbasis IoT
+                </h1>
+
+                <p>
+                  Goldenchick merupakan sistem peternakan ayam kampung berbasis Internet of Things (IoT) 
+                  yang membantu peternak dalam mengatur pemberian pakan otomatis, memantau suhu kandang, 
+                  serta menerima notifikasi Telegram secara real-time untuk meningkatkan kualitas dan 
+                  efisiensi peternakan.
+                </p>
+
+              
+                <div>
+                  <button class="btn">
+                    <a href="${BASE_URL}/register"><span>Register</span></a>
+                    <i class="ri-user-add-line"></i>
+                  </button>
+
+                  <button class="btn btn_outline">
+                    <a href="${BASE_URL}/login"><span>Login</span></a>
+                    <i class="ri-login-box-line"></i>
+                  </button>
+                </div>
+
+                
+
+               <div class="flex items-center gap-5 text-2xl lg:pt-10">
+                  <a href="${BASE_URL}/instagram"><i class="ri-instagram-line duration-300 cursor-pointer hover:text-yellow-900 hover:scale-125"></i></a>
+              </div>
+
+              </div>
+
+              <!--~~~~~~~~~~~~~~~ Image ~~~~~~~~~~~~~~~-->
+              <div class="w-full relative lg:w-1/2">
+                <img src="assets/img/Keluarga Ayam2.png" alt="keluarga ayam_image" class="home_image">
+
+              <!--~~~~~~~~~~~~~~~ Leaf ~~~~~~~~~~~~~~~-->
+              <div class="absolute -top-10 right-0 opacity-30 xl:top-5 animate-movingY">
+                <i class="ri-seedling-line text-5xl"></i>
+              </div>
+              
+              <!--~~~~~~~~~~~~~~~ Flower ~~~~~~~~~~~~~~~-->
+              <div class="absolute bottom-2 left-0 opacity-30 animate-rotating">
+                <i class="ri-sun-line text-5xl"></i>
+              </div>
+
+              <!--~~~~~~~~~~~~~~~ Plant ~~~~~~~~~~~~~~~-->
+              <div class=" hidden absolute -top-10 -left-5 opacity-30 lg:block animate-scalingUp">
+                <i class="ri-home-4-line text-6xl"></i>
+              </div>
+
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        
+
+        <!--~~~~~~~~~~~~~~~ About us ~~~~~~~~~~~~~~~-->
+        <section id="about" class="relative overflow-hidden">
+            <div class="about_dahan absolute -top-8 -right-12 opacity-50">
+              <img src="assets/img/dahan daun.png" alt="dahan_image" class="w-40 md:w-52 xl:w-64">
+            </div>
+
+            <div class="about_top flex flex-col items-center gap-3 text-center mb-10 md:mb-20">
+              <h2 class="title">Sistem Peternakan Berbasis IoT</h2>
+            <p class="max-w-2xl">
+              Goldenchick merupakan sistem peternakan ayam kampung berbasis Internet of Things (IoT) 
+              yang dirancang untuk membantu peternak dalam memantau kondisi kandang, mengatur pemberian 
+              pakan otomatis, serta meningkatkan efisiensi dan kualitas peternakan secara modern.
+            </p>
+            </div>
+
+            <div class="container space-y-10 xl:space-y-0">
+          <!--~~~~~~~~~~~~~~~ item 1 ~~~~~~~~~~~~~~~-->
+          <div class="flex flex-col items-center lg:flex-row gap-5">
+
+              <!--~~~~~~~~~~~~~~~ image ~~~~~~~~~~~~~~~-->
+              <div class="about_item_Ayam-Doc-img w-full lg:w-1/2">
+                <img src="assets/img/Ayam DOC2.png" alt="pitik DOC_image" 
+                class="w-full sm:w-2/3 lg:w-full xl:w-2/3 mx-auto">
+              </div>
+
+              <!--~~~~~~~~~~~~~~~ Content ~~~~~~~~~~~~~~~-->
+              <div class="about_item_1-content w-full lg:w-1/2">
+                <div class="space-y-5">
+                  <h3>
+                    Monitoring Suhu <br>
+                    <span class="text-amber-950">Ayam DOC</span>
+                  </h3>
+
+                  <p class="text-white font-normal">
+                    Sistem monitoring suhu digunakan untuk memantau kondisi kandang ayam DOC secara real-time. 
+                    Sensor suhu akan membantu peternak menjaga suhu kandang tetap stabil sehingga pertumbuhan 
+                    ayam menjadi lebih sehat dan optimal.
+                  </p>
+                </div>
+              </div>
+
+          </div>
+
+          <!--~~~~~~~~~~~~~~~ item 2 ~~~~~~~~~~~~~~~-->
+          <div class="flex flex-col items-center lg:flex-row-reverse gap-5">
+
+              <!--~~~~~~~~~~~~~~~ image ~~~~~~~~~~~~~~~-->
+              <div class="about_item_Ayam-Grower-img w-full lg:w-1/2">
+                <img src="assets/img/Ayam Grower2.png" alt="pitik Grower_image" 
+                class="w-full sm:w-2/3 lg:w-full xl:w-2/3 mx-auto">
+              </div>
+
+              <!--~~~~~~~~~~~~~~~ Content ~~~~~~~~~~~~~~~-->
+              <div class="about_item_2-content w-full lg:w-1/2">
+                <div class="space-y-5">
+                  <h3>
+                    Pemberian Pakan <br>
+                    <span class="text-yellow-950">Ayam Grower</span>
+                  </h3>
+
+               <p class="text-white font-normal">
+                Sistem feeder otomatis membantu peternak dalam mengatur jadwal pemberian pakan ayam grower 
+                secara teratur dan efisien. Dengan teknologi IoT, proses pemberian pakan dapat dilakukan 
+                otomatis sehingga menghemat waktu dan tenaga.
+              </p>
+                </div>
+              </div>
+
+          </div>
+
+        </div>
+        </section>
+
+        <!--~~~~~~~~~~~~~~~ Services ~~~~~~~~~~~~~~~-->
+        <div class="bg-white text-yellow-600 py-20">
+          <div class="container w-full grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <!--~~~~~~~~~~~~~~~ Card 1 ~~~~~~~~~~~~~~~-->
+            <div class="service_card border border-yellow-600 p-5 cursor-pointer rounded-md hover:shadow-2xl hover:-translate-y-1 duration-300 space-y-5">
+              <div class="flex items-center gap-5">
+                <i class="ri-time-line text-3xl md:text-4xl xl:text-5xl"></i>
+                <p class="md-text-lg font-bold">
+                  Pemberian Pakan <br>
+                  Terjadwal
+                </p>
+              </div>
+              <p>
+                Sistem dapat memberikan pakan ayam grower secara otomatis sesuai jadwal yang telah ditentukan.
+              </p>
+            </div>
+
+            <!--~~~~~~~~~~~~~~~ Card 2 ~~~~~~~~~~~~~~~-->
+            <div class="service_card border border-yellow-600 p-5 cursor-pointer rounded-md hover:shadow-2xl hover:-translate-y-1 duration-300 space-y-5">
+              <div class="flex items-center gap-5">
+                <i class="ri-temp-hot-line text-3xl md:text-4xl xl:text-5xl"></i>
+               <p class="md-text-lg font-bold">
+                Monitoring <br>
+                Suhu Kandang
+              </p>
+              </div>
+             <p>
+              Memantau suhu kandang ayam DOC secara real-time agar kondisi kandang tetap ideal.
+            </p>
+            </div>
+
+            <!--~~~~~~~~~~~~~~~ Card 3 ~~~~~~~~~~~~~~~-->
+            <div class="service_card border border-yellow-600 p-5 cursor-pointer rounded-md hover:shadow-2xl hover:-translate-y-1 duration-300 space-y-5">
+              <div class="flex items-center gap-5">
+                <i class="ri-telegram-line text-3xl md:text-4xl xl:text-5xl"></i>
+                <p class="md-text-lg font-bold">
+                  Notifikasi <br>
+                  Telegram
+                </p>
+              </div>
+              <p>
+                Peternak akan menerima notifikasi otomatis melalui Telegram ketika terjadi perubahan kondisi kandang.
+              </p>
+            </div>
+
+            <!--~~~~~~~~~~~~~~~ Card 4 ~~~~~~~~~~~~~~~-->
+            <div class="service_card border border-yellow-600 p-5 cursor-pointer rounded-md hover:shadow-2xl hover:-translate-y-1 duration-300 space-y-5">
+              <div class="flex items-center gap-5">
+                <i class="ri-cpu-line text-3xl md:text-4xl xl:text-5xl"></i>
+                <p class="md-text-lg font-bold">
+                  Sistem <br>
+                  Berbasis IoT
+                </p>
+              </div>
+              <p>
+                Menghubungkan perangkat sensor dan kontrol kandang ke website untuk monitoring yang lebih mudah.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+              <!--~~~~~~~~~~~~~~~ Features ~~~~~~~~~~~~~~~-->
+        <section id="features" class="py-20 bg-yellow-500 overflow-hidden">
+
+          <!-- top -->
+          <div class="features_top text-center mb-20">
+            <h2 class="title">Fitur Utama Sistem</h2>
+
+            <p class="max-w-2xl mx-auto">
+              Sistem peternakan pintar berbasis IoT yang membantu peternak
+              memantau suhu kandang serta mengatur pemberian pakan otomatis
+              secara real-time.
+            </p>
+          </div>
+
+          <div class="container flex flex-col gap-40">
+
+            <!--========== Feature 1 ==========-->
+            <div class="flex flex-col items-center gap-16 lg:flex-row">
+
+              <!-- image -->
+              <div class="w-full relative lg:w-1/2">
+
+                <div class="bg-yellow-600 rounded-3xl p-4 shadow-xl">
+                  <img src="assets/img/suhu-mockup.png"
+                  alt="monitoring suhu_image"
+                  class="rounded-2xl w-full, features_image">
+                </div>
+
+                <!-- floating -->
+                <div class="absolute -top-5 -right-5 bg-red-100 text-red-600 px-4 py-3 rounded-2xl shadow-lg hidden md:block">
+                  <div class="flex items-center gap-2">
+                    <i class="ri-alarm-warning-line text-2xl"></i>
+                    <p class="font-semibold">Suhu Tidak Stabil</p>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- content -->
+             <div class="features_item_1-content w-full lg:w-1/2">
+                <div class="space-y-5">
+
+                <div>
+                  <p class="text-yellow-950 font-semibold uppercase tracking-[3px]">
+                    Monitoring IoT
+                  </p>
+
+                  <h3 class="text-3xl md:text-5xl font-bold leading-tight">
+                    Monitoring Suhu <br>
+                    Kandang Ayam DOC
+                  </h3>
+                </div>
+
+                <p class="text-white leading-relaxed">
+                  Sistem monitoring suhu membantu peternak memantau kondisi kandang
+                  ayam DOC secara real-time agar suhu tetap stabil dan mendukung
+                  pertumbuhan ayam yang lebih sehat.
+                </p>
+
+                <!-- points -->
+                <div class="space-y-4">
+
+                  <div class="flex items-start gap-3">
+                    <i class="ri-checkbox-circle-fill text-2xl text-yellow-950"></i>
+                    <p>Monitoring suhu kandang secara real-time.</p>
+                  </div>
+
+                  <div class="flex items-start gap-3">
+                    <i class="ri-checkbox-circle-fill text-2xl text-yellow-950"></i>
+                    <p>Menampilkan grafik suhu melalui website monitoring.</p>
+                  </div>
+
+                  <div class="flex items-start gap-3">
+                    <i class="ri-checkbox-circle-fill text-2xl text-yellow-950"></i>
+                    <p>Notifikasi otomatis ketika suhu tidak stabil.</p>
+                  </div>
+
+                  <div class="flex items-start gap-3">
+                    <i class="ri-checkbox-circle-fill text-2xl text-yellow-950"></i>
+                    <p>Membantu menjaga kondisi kandang tetap ideal.</p>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            </div>
+
+            <!--========== Feature 2 ==========-->
+            <div class="flex flex-col items-center gap-16 lg:flex-row-reverse">
+
+              <!-- content -->
+              <div class="features_item_2-content w-full lg:w-1/2 space-y-6">
+
+                <div>
+                  <p class="text-yellow-950 font-semibold uppercase tracking-[3px]">
+                    Automatic Feeder
+                  </p>
+
+                  <h3 class="text-3xl md:text-5xl font-bold leading-tight">
+                    Pemberian Pakan <br>
+                    Terjadwal
+                  </h3>
+                </div>
+
+                <p class="text-white leading-relaxed">
+                  Sistem feeder otomatis memungkinkan pemberian pakan ayam grower
+                  dilakukan secara terjadwal sehingga lebih efisien dan membantu
+                  peternak menghemat waktu serta tenaga.
+                </p>
+
+                <!-- points -->
+                <div class="space-y-4">
+
+                  <div class="flex items-start gap-3">
+                    <i class="ri-checkbox-circle-fill text-2xl text-yellow-950"></i>
+                    <p>Pemberian pakan otomatis sesuai jadwal.</p>
+                  </div>
+
+                  <div class="flex items-start gap-3">
+                    <i class="ri-checkbox-circle-fill text-2xl text-yellow-950"></i>
+                    <p>Mengurangi keterlambatan pemberian pakan.</p>
+                  </div>
+
+                  <div class="flex items-start gap-3">
+                    <i class="ri-checkbox-circle-fill text-2xl text-yellow-950"></i>
+                    <p>Membantu menghemat waktu dan tenaga peternak.</p>
+                  </div>
+
+                  <div class="flex items-start gap-3">
+                    <i class="ri-checkbox-circle-fill text-2xl text-yellow-950"></i>
+                    <p>Dapat dimonitor melalui website berbasis IoT.</p>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <!-- image -->
+              <div class="w-full relative lg:w-1/2">
+
+                <div class="bg-yellow-600 rounded-3xl p-4 shadow-xl">
+                  <img src="assets/img/pakan-mockup.png"
+                  alt="feeder otomatis_image"
+                  class="rounded-2xl w-full, features_image">
+                </div>
+
+                <!-- floating -->
+                <div class="absolute -bottom-5 -left-5 bg-green-100 text-green-700 px-4 py-3 rounded-2xl shadow-lg hidden md:block">
+                  <div class="flex items-center gap-2">
+                    <i class="ri-check-double-line text-2xl"></i>
+                    <p class="font-semibold">Pakan Berhasil Diberikan</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+    </main>
+
+        <!--~~~~~~~~~~~~~~~ Footer ~~~~~~~~~~~~~~~-->
+    <footer class="bg-yellow-100 text-green-950 pt-20 pb-10 md:pt-28 relative">
+        
+        <!-- social icon -->
+         <div class="footer_icon container mt-16 mb-10">
+          <div class="border-b border-yellow-700 relative">
+            <div class="absolute top-0 transform -translate-y-1/2 left-0 right-0 max-w-36 mx-auto">
+              <div class="bg-yellow-100 text-lg text-center space-x-2">
+                 <i class="hidden ri-whatsapp-line hover:text-yellow-600 duration-300 cursor-pointer"></i>
+
+                  <a href="${BASE_URL}/instagram" target="_blank">
+                    <i class="ri-instagram-line hover:text-yellow-600 duration-300 cursor-pointer"></i>
+                  </a>
+              </div>
+            </div>
+          </div>
+         </div>
+
+        <!-- content -->
+         <div class="footer_content container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 text-center md:text-start">
+            <!-- item 1 -->
+             <div>
+              <div class="text-7xl text-yellow-950 text-center inline-block">
+                <i class="ri-seedling-line"></i>
+                <p class="font-lobster  text-xl sm:text-2xl">Goldenchick.</p>
+              </div>
+             </div>
+
+             <!-- item 2 -->
+              <div>
+                <p class="mb-5 font-bold text-xl">Menu</p>
+
+                <div class="flex flex-col gap-1">
+                  <span>Home</span>
+                  <span>About</span>
+                  <span>Features</span>
+                </div>
+              </div>
+
+              <!-- item 3 -->
+              <div>
+                <p class="mb-5 font-bold text-xl">Layanan Sistem</p>
+
+                <div class="flex flex-col gap-1">
+                  <span>Monitoring IoT</span>
+                  <span>Monitoring Suhu</span>
+                  <span>Pakan Otomatis</span>
+                  <span>Notifikasi Telegram</span>
+                  <span>Kontrol IoT</span>
+                </div>
+              </div>
+
+              <!-- item 4 -->
+              <div>
+                <p class="mb-5 font-bold text-xl">Contact Us</p>
+
+                <div class="flex flex-col gap-1">
+                  <a href="mailto:place@domain.com">email</a>
+                  <br>
+                  <p>Golden Chick, Indonesia</p>
+                </div>
+              </div>
+         </div>
+
+        <!-- copyright -->
+         <div class="copy_right container">
+          <p class="text-center mt-10 opacity-50">Copyright &copy; 2026 Goldenchick. All rights reserved.</p>
+         </div>
+
+        <!-- floral image -->
+         <div class="footer_floral absolute bottom-0 left-0 opacity-20 pointer-events-none">
+          <img src="assets/img/Floral.1.png" alt="Floral_image" class="w-full lg:w-1/2">
+         </div>
+
+    </footer>
+
+    <!--~~~~~~~~~~~~~~~ Scroll Up ~~~~~~~~~~~~~~~-->
+    <a href="#" class="fixed right-4 -bottom-1/2 bg-yellow-500 shadow-sm inline-block px-3 py-1 md:px-4 md:py-2 rounded-md text-lg z-50 hover:-translate-y-1 duration-300" id="scroll-up">
+      <i class="ri-arrow-up-line"></i>
+    </a>
+
+    <!--~~~~~~~~~~~~~~~ Swiper JS ~~~~~~~~~~~~~~~-->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+    <!--~~~~~~~~~~~~~~~ SCROLLREVEAL ~~~~~~~~~~~~~~~-->
+    <script src="assets/js/scrollreveal.min.js"></script>
+
+    <!--~~~~~~~~~~~~~~~ mainjs ~~~~~~~~~~~~~~~-->
+   <script src="main.js"></script>
+</body>
+
+</html>

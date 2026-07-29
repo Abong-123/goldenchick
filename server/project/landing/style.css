@@ -1,0 +1,595 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
+
+* {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+
+/* Body Styles */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fff8dc, #ffe082);
+}
+
+/* Container */
+.container {
+    position: relative;
+    width: 850px;
+    height: 550px;
+    background: #fff;
+    margin: 20px;
+    border-radius: 30px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.container h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.container p {
+    font-size: 14px;
+    margin: 15px 0;
+    color: #666;
+}
+
+form {
+    width: 100%;
+}
+
+/* ========== FORM BOX STYLES ========== */
+.form-box {
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    color: #333;
+    text-align: center;
+    padding: 40px;
+    z-index: 1;
+    transition: right 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+}
+
+/* Login form */
+.form-box.login {
+    right: 0;
+}
+
+/* Register form - default tersembunyi untuk mode login */
+.form-box.register {
+    right: 0;
+    visibility: hidden;
+    opacity: 0;
+    transition: right 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.4s ease,
+                visibility 0s 0.6s;
+}
+
+/* Active container untuk toggle antara login dan register */
+.container.active .form-box.login {
+    right: 50%;
+    opacity: 0;
+    visibility: hidden;
+    transition-delay: 0.2s;
+}
+
+.container.active .form-box.register {
+    right: 0;
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0.4s;
+}
+
+/* ========== REGISTER MODE (Standalone) ========== */
+body.register-mode .form-box {
+    width: 50%;
+    right: 0;
+}
+
+body.register-mode .form-box.register {
+    visibility: visible;
+    opacity: 1;
+    position: absolute;
+}
+
+body.register-mode .form-box.login {
+    display: none;
+}
+
+/* ========== INPUT BOX STYLES ========== */
+.input-box {
+    position: relative;
+    margin: 25px 0;
+    transition: transform 0.3s ease;
+}
+
+.form-box.register .input-box {
+    margin: 18px 0;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 13px 50px 13px 20px;
+    background: #fff7e6;
+    border-radius: 8px;
+    border: 1px solid #f3d28b;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.form-box.register .input-box input {
+    padding: 12px 50px 12px 18px;
+    font-size: 14px;
+}
+
+.input-box input:focus {
+    border-color: #d97706;
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+    transform: scale(1.02);
+}
+
+.input-box input::placeholder {
+    color: #888;
+    font-weight: 400;
+}
+
+.input-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #d97706;
+    transition: all 0.3s ease;
+}
+
+.input-box input:focus + i {
+    transform: translateY(-50%) scale(1.1);
+    color: #b45309;
+}
+
+/* ========== LINK STYLES ========== */
+.forgot-link {
+    margin: -15px 0 20px;
+    text-align: right;
+}
+
+.form-box.register .forgot-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.forgot-link a {
+    font-size: 13px;
+    color: #666;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.forgot-link a:hover {
+    color: #d97706;
+    transform: translateX(3px);
+}
+
+.form-box.register .forgot-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-box.register .forgot-link a:hover {
+    transform: translateX(-3px);
+}
+
+/* ========== BUTTON STYLES ========== */
+.btn {
+    width: 100%;
+    height: 48px;
+    background: #d97706;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #fff;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    background: #b45309;
+    box-shadow: 0 10px 20px rgba(217, 119, 6, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.form-box.register .btn {
+    background: linear-gradient(135deg, #d97706, #facc15);
+    position: relative;
+    overflow: hidden;
+}
+
+.form-box.register .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.form-box.register .btn:hover::before {
+    left: 100%;
+}
+
+/* ========== TOGGLE BOX STYLES ========== */
+.toggle-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* Default untuk login page (toggle di kiri) */
+.toggle-box::before {
+    content: '';
+    position: absolute;
+    left: -250%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(135deg, #facc15, #d97706);
+    border-radius: 150px;
+    z-index: 2;
+    transition: left 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.container.active .toggle-box::before {
+    left: 50%;
+}
+
+/* Toggle Panel */
+.toggle-panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 40px;
+    z-index: 2;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-panel h1 {
+    font-size: 32px;
+    line-height: 1.3;
+    margin-bottom: 15px;
+}
+
+.toggle-panel p {
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 280px;
+    margin-bottom: 25px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.toggle-panel .btn {
+    width: 160px;
+    height: 46px;
+    background: transparent;
+    border: 2px solid #fff;
+    box-shadow: none;
+    color: #fff;
+}
+
+.toggle-panel .btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Left Panel */
+.toggle-panel.toggle-left {
+    left: 0;
+    transition-delay: 0.2s;
+}
+
+.container.active .toggle-panel.toggle-left {
+    left: -50%;
+    transition-delay: 0.1s;
+}
+
+/* Right Panel */
+.toggle-panel.toggle-right {
+    right: -50%;
+    transition-delay: 0.1s;
+}
+
+.container.active .toggle-panel.toggle-right {
+    right: 0;
+    transition-delay: 0.2s;
+}
+
+/* Animasi untuk konten panel */
+.toggle-panel.toggle-left h1,
+.toggle-panel.toggle-left p,
+.toggle-panel.toggle-left .btn {
+    transform: translateX(0);
+    opacity: 1;
+    transition: all 0.4s ease;
+}
+
+.container.active .toggle-panel.toggle-left h1,
+.container.active .toggle-panel.toggle-left p,
+.container.active .toggle-panel.toggle-left .btn {
+    transform: translateX(-50px);
+    opacity: 0;
+}
+
+.toggle-panel.toggle-right h1,
+.toggle-panel.toggle-right p,
+.toggle-panel.toggle-right .btn {
+    transform: translateX(50px);
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.container.active .toggle-panel.toggle-right h1,
+.container.active .toggle-panel.toggle-right p,
+.container.active .toggle-panel.toggle-right .btn {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* ========== REGISTER MODE TOGGLE (Standalone) ========== */
+body.register-mode .toggle-box::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, #facc15, #d97706);
+    z-index: 2;
+    border-radius: 0 150px 150px 0;
+    transition: none;
+}
+
+body.register-mode .toggle-panel {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 40px;
+    z-index: 3;
+}
+
+body.register-mode .toggle-panel.toggle-left {
+    left: 0;
+}
+
+body.register-mode .toggle-panel.toggle-right {
+    display: none;
+}
+
+/* ========== LOGIN FORM SPECIFIC ========== */
+.form-box.login h1 span {
+    color: #d97706;
+}
+
+.form-box.login h1 i {
+    color: #d97706;
+    margin-right: 8px;
+}
+
+/* ========== REGISTER FORM SPECIFIC ========== */
+.form-box.register .form-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 5px;
+}
+
+.form-box.register .form-title i {
+    font-size: 28px;
+    color: #d97706;
+    background: #fff3d1;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(217, 119, 6, 0.2);
+    transition: all 0.3s ease;
+}
+
+.form-box.register .form-title span {
+    font-size: 26px;
+    background: linear-gradient(135deg, #d97706, #facc15);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.form-box.register p {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+/* Password info */
+.password-info {
+    display: block;
+    text-align: left;
+    font-size: 11px;
+    color: #888;
+    margin-top: -12px;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+}
+
+/* ========== SCROLLBAR ========== */
+.form-box::-webkit-scrollbar,
+.form-box.register::-webkit-scrollbar {
+    width: 4px;
+}
+
+.form-box::-webkit-scrollbar-track,
+.form-box.register::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.form-box::-webkit-scrollbar-thumb,
+.form-box.register::-webkit-scrollbar-thumb {
+    background: #d97706;
+    border-radius: 10px;
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+body.register-mode .form-box.register {
+    animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body.register-mode .form-box.register .input-box {
+    animation: fadeInUp 0.4s ease-out backwards;
+}
+
+body.register-mode .form-box.register .input-box:nth-child(1) { animation-delay: 0.1s; }
+body.register-mode .form-box.register .input-box:nth-child(2) { animation-delay: 0.15s; }
+body.register-mode .form-box.register .input-box:nth-child(3) { animation-delay: 0.2s; }
+body.register-mode .form-box.register .input-box:nth-child(4) { animation-delay: 0.25s; }
+body.register-mode .form-box.register .input-box:nth-child(5) { animation-delay: 0.3s; }
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        max-width: 500px;
+        height: auto;
+        min-height: 550px;
+    }
+
+    .form-box {
+        width: 100%;
+        padding: 30px 25px;
+    }
+
+    .toggle-box {
+        display: none;
+    }
+
+    .form-box.register {
+        position: relative;
+        visibility: visible;
+        opacity: 1;
+        display: flex;
+    }
+    
+    .container.active .form-box.login {
+        display: none;
+    }
+    
+    .container.active .form-box.register {
+        display: flex;
+    }
+    
+    /* Register mode responsive */
+    body.register-mode .form-box {
+        width: 100%;
+        position: relative;
+    }
+    
+    body.register-mode .toggle-box {
+        display: none;
+    }
+    
+    .forgot-link {
+        text-align: center;
+    }
+    
+    .form-box.register .form-title span {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-box {
+        padding: 25px 20px;
+    }
+    
+    .container h1 {
+        font-size: 24px;
+    }
+    
+    .btn {
+        height: 44px;
+        font-size: 14px;
+    }
+    
+    .input-box input {
+        padding: 11px 45px 11px 15px;
+        font-size: 14px;
+    }
+    
+    .form-box.register .form-title span {
+        font-size: 20px;
+    }
+    
+    .form-box.register .form-title i {
+        font-size: 22px;
+        padding: 8px;
+    }
+}

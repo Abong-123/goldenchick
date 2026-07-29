@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body class="register-mode">
+    <div class="container">
+        <!-- Simple side panel -->
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Golden Chick</h1>
+                <p>Sudah punya akun? Masuk untuk melanjutkan monitoring kandang.</p>
+                <a class="btn" href="/login" style="display: inline-flex; align-items: center; justify-content: center; line-height: 1; text-align: center;">Login</a>
+            </div>
+        </div>
+
+        <div class="form-box register">
+            <form action="#" id="registerForm">
+                <h1 class="form-title">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Daftar Akun</span>
+                </h1>
+                <p>Monitoring kandang jadi lebih cerdas</p>
+
+                <div class="input-box">
+                    <input type="text" id="nama" placeholder="Nama Peternakan" required>
+                    <i class="fa-solid fa-tractor"></i>
+                </div>
+
+                <div class="input-box">
+                    <input type="email" id="email" placeholder="Email" required>
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+
+                <div class="input-box">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <i class="fa-solid fa-user-tag"></i>
+                </div>
+
+                <div class="input-box">
+                    <input type="password" id="password" placeholder="Password" minlength="6" required>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+
+                <div class="input-box">
+                    <input type="password" id="confirmPassword" placeholder="Konfirmasi Password" minlength="6" required>
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+
+                <small class="password-info">Password harus minimal 6 karakter</small>
+
+                <button type="submit" class="btn">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Daftar Sekarang
+                </button>
+
+                <div class="forgot-link" style="margin-top:20px;">
+                    <a href="${BASE_URL}/login">← Sudah punya akun? Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="register.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+version: '3.8'
+
+networks:
+  internal:
+    driver: bridge
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./landing:/usr/share/nginx/html
+    depends_on:
+      - backend-node
+    networks:
+      - internal
+    restart: always
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/passwd:/mosquitto/config/passwd
+      - mosquitto_data:/mosquitto/data
+    networks:
+      - internal
+    restart: always
+
+  backend-node:
+    build: ./backend-node
+    environment:
+      - MQTT_BROKER=${MQTT_BROKER}
+      - MQTT_PORT=${MQTT_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - mosquitto
+      - postgres
+    networks:
+      - internal
+    restart: always
+
+  backend-fastapi:
+    build: ./backend-fastapi
+    environment:
+      - MQTT_BROKER=${MQTT_BROKER}
+      - MQTT_PORT=${MQTT_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - mosquitto
+      - postgres
+    networks:
+      - internal
+    restart: unless-stopped
+  
+  bot-telegram:
+    build: ./backend-fastapi
+    command: python bot.py
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - BOT_TOKEN=${BOT_TOKEN}
+    depends_on:
+      - postgres
+    networks:
+      - internal
+    restart: unless-stopped
+
+  alert-telegram:
+    build: ./backend-fastapi
+    command: python alert_bot.py
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - BOT_TOKEN=${BOT_TOKEN}
+    depends_on:
+      - postgres
+    networks:
+      - internal
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - internal
+    restart: always
+
+volumes:
+  pgdata:
+  mosquitto_data:

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        const BASE_URL = window.location.origin;
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Simple side panel -->
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>Golden Chick</h1>
+                <p>Belum punya akun? Daftar sekarang untuk mulai memonitor kandang.</p>
+                <a class="btn" href="${BASE_URL}/register" style="display: inline-flex; align-items: center; justify-content: center; line-height: 1; text-align: center;">Register</a>
+            </div>
+        </div>
+        <div class="form-box login">
+            <form action="#">
+                <h1>
+                    <i class="fa-solid fa-microchip"></i>
+                    IoT Kandang Ayam <span>Cerdas</span>
+                </h1>
+                <p>Manajemen & Monitoring Ayam Modern</p>
+                <div class="input-box">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <i class="fa-solid fa-user-tag"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="${BASE_URL}/forgot-password">Lupa Password?</a>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Masuk Sekarang
+                </button>
+
+                <div class="forgot-link" style="margin-top:20px;">
+                    <a href="${BASE_URL}/register">Belum punya akun? Daftar →</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

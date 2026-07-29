@@ -1,0 +1,71 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+dist/
+build/
+coverage/
+
+# Docker / local overrides
+docker-compose.override.yml
+*.local
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+postgres-data/
+pgdata/
+
+# Logs
+logs/
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arduino / ESP32 build artifacts
+*.bin
+*.elf
+*.hex
+*.map
+*.o
+*.a
+*.d
+*.bak
+.pio/
+.pioenvs/
+piolibdeps/
+firmware/**/build/
+
+# Certificates and secrets
+*.pem
+*.key
+*.crt
+*.csr
+*.pfx
