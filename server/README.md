@@ -302,25 +302,25 @@ npx tailwindcss -i ./src/input.css -o ./src/output.css --minify
 ## Screenshots
 
 <p align="center">
-  <img src="server/img/landing.png" alt="Landing Page" width="700"/>
+  <img src="https://raw.githubusercontent.com/Abong-123/goldenchick/main/server/img/landing.png" alt="Landing Page" width="700"/>
   <br/>
   <em>Landing Page</em>
 </p>
 
 <p align="center">
-  <img src="server/img/dashboard.png" alt="Main Dashboard" width="700"/>
+  <img src="https://raw.githubusercontent.com/Abong-123/goldenchick/main/server/img/dashboard.png" alt="Main Dashboard" width="700"/>
   <br/>
   <em>Main Dashboard</em>
 </p>
 
 <p align="center">
-  <img src="server/img/dashboard-feeder.png" alt="Feeder Dashboard" width="700"/>
+  <img src="https://raw.githubusercontent.com/Abong-123/goldenchick/main/server/img/dashboard-feeder.png" alt="Feeder Dashboard" width="700"/>
   <br/>
   <em>Feeder Dashboard</em>
 </p>
 
 <p align="center">
-  <img src="server/img/dashboard-temp.png" alt="Temperature Dashboard" width="700"/>
+  <img src="https://raw.githubusercontent.com/Abong-123/goldenchick/main/server/img/dashboard-temp.png" alt="Temperature Dashboard" width="700"/>
   <br/>
   <em>Temperature Dashboard</em>
 </p>
