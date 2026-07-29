@@ -298,6 +298,7 @@ This project uses Tailwind CSS in landing page without a JavaScript framework. T
 
 ```bash
 npx tailwindcss -i ./src/input.css -o ./src/output.css --minify
+```
 
 ## Screenshots
 
