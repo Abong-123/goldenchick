@@ -37,7 +37,7 @@ This folder contains the backend infrastructure for Goldenchick, orchestrated wi
 
 | Service | Description | Port |
 |---|---|---:|
-| Nginx | Reverse proxy and load balancer | 80 |
+| Nginx | Reverse proxy and load balancer | 80/443 |
 | Mosquitto | MQTT broker for IoT device communication | 1883 |
 | Backend Node.js | Business logic and API endpoints | 3000 |
 | Backend FastAPI | High-performance async API services | 8000 |
