@@ -20,7 +20,7 @@
 
 <!-- LOGO & TITLE -->
 <p align="center">
-  <img src="img/icon.png" alt="Goldenchick Logo" width="120"/>
+  <img src="img/logo.png" alt="Goldenchick Logo" width="120"/>
 </p>
 
 <h1 align="center">Goldenchick</h1>
