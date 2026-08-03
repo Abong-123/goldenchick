@@ -52,7 +52,7 @@ All devices are built on the **Espressif ESP32-S3 N16R8** board with Arduino Fra
 
 ### Features
 - PID-based automatic temperature regulation
-- Real-time temperature & humidity monitoring
+- Real-time temperature monitoring
 - Setpoint adjustment via keypad or MQTT
 - Heater failover detection with current sensor
 - WiFi SoftAP Provisioning (manual trigger via keypad)
