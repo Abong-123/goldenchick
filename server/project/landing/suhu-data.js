@@ -22,6 +22,9 @@ let kandangSettings = {}   // { codenumber: { jenis, fase } }
 let kandangLatest   = {}   // { codenumber: data terbaru dari API }
 let jamLabels       = []
 let allCodenumbers  = []   // list codenumber (kandang) milik user, dari API
+let kandangSuhuBuffer = {}   // { codenumber: [ {suhu, timestamp}, ... maks 10 ] }
+const BUFFER_SIZE   = 10
+const JUMP_THRESHOLD = 4     // loncatan >= 4°C antar data dianggap tidak wajar
 
 // ========== THRESHOLD OFFLINE ==========
 // MCU kirim tiap 2 menit, offline jika tidak ada data > 10 menit
@@ -31,6 +34,66 @@ function isOffline(createdAt) {
     if (!createdAt) return true
     const lastTime = new Date(createdAt).getTime()
     return (Date.now() - lastTime) > OFFLINE_THRESHOLD_MS
+}
+
+// ========== DETEKSI SENSOR RUSAK ==========
+function pushToBuffer(codenumber, suhu, timestamp) {
+    if (!kandangSuhuBuffer[codenumber]) kandangSuhuBuffer[codenumber] = []
+    const buf = kandangSuhuBuffer[codenumber]
+
+    const last = buf[buf.length - 1]
+    if (last && last.timestamp === timestamp) {
+        // Data belum berubah dari MCU (masih row yang sama), jangan dobel push
+        return
+    }
+
+    buf.push({ suhu, timestamp })
+    if (buf.length > BUFFER_SIZE) buf.shift()
+}
+
+// Toleransi PID — kalau nilai stuck tapi masih dekat setpoint, itu normal (PID berhasil stabil)
+const PID_STABLE_TOLERANCE = 3
+
+// Cek 1: nilai suhu stuck (tidak berubah sama sekali) selama 10 data terakhir
+// DIKECUALIKAN kalau nilai stuck itu masih dalam ±PID_STABLE_TOLERANCE dari setpoint
+// (karena itu tandanya PID berhasil menstabilkan suhu, bukan sensor rusak)
+function isSensorStuck(codenumber, setpoint) {
+    const buf = kandangSuhuBuffer[codenumber]
+    if (!buf || buf.length < BUFFER_SIZE) return false
+
+    const first = buf[0].suhu
+    const semuaSama = buf.every(item => item.suhu === first)
+    if (!semuaSama) return false
+
+    // Kalau stuck TAPI dekat setpoint → itu wajar hasil kerja PID, bukan bug
+    if (setpoint != null) {
+        const selisihKeSetpoint = Math.abs(first - setpoint)
+        if (selisihKeSetpoint <= PID_STABLE_TOLERANCE) {
+            return false   // dikecualikan — PID sedang bekerja normal
+        }
+    }
+
+    return true
+}
+
+// Cek 2: loncatan drastis & konsisten (naik-turun tajam terus menerus) selama 10 data
+function isSensorErratic(codenumber) {
+    const buf = kandangSuhuBuffer[codenumber]
+    if (!buf || buf.length < BUFFER_SIZE) return false
+
+    const diffs = []
+    for (let i = 1; i < buf.length; i++) {
+        diffs.push(buf[i].suhu - buf[i - 1].suhu)
+    }
+
+    return diffs.every(d => Math.abs(d) >= JUMP_THRESHOLD)
+}
+
+// Gabungan cek sensor rusak
+function checkSensorRusak(codenumber, setpoint) {
+    if (isSensorStuck(codenumber, setpoint)) return { rusak: true, alasan: 'stuck' }
+    if (isSensorErratic(codenumber))         return { rusak: true, alasan: 'erratic' }
+    return { rusak: false, alasan: null }
 }
 
 // ========== KONFIGURASI SUHU ==========
@@ -139,11 +202,18 @@ async function fetchLatestSuhuFromMCU(codenumber) {
             return { suhu: '--', timestamp: row.created_at, offline: true }
         }
 
+        const suhuNow = parseFloat(row.temperature)
+        const setpointNow  = row.setpoint != null ? parseFloat(row.setpoint) : null   // <-- BARU
+
+        pushToBuffer(codenumber, suhuNow, row.created_at)
+        const sensorCheck = checkSensorRusak(codenumber, setpointNow) 
+
         return {
             codenumber: codenumber,
             suhu:       parseFloat(row.temperature),
             timestamp:  row.created_at,
             offline:    false,
+            sensorRusak: sensorCheck, 
             power:      row.power,
             mode:       row.mode,
             status:     row.status,
@@ -260,7 +330,7 @@ Foto Peternakan:
                 </a>
                 <p class="text-xs text-gray-400 mt-6">
                     <i class="fa-solid fa-clock"></i>
-                    <a href="panduan.pdf" download class="underline ml-1">Klik disini</a> untuk mengunduh panduan penggunaan aplikasi.
+                    <a href="buku_panduan_goldenchick.pdf" download class="underline ml-1">Klik disini</a> untuk mengunduh panduan penggunaan aplikasi.
                 </p>
             </div>
         </div>`
@@ -333,6 +403,47 @@ Foto:
         </div>`
 }
 
+// ========== TAMPILKAN SENSOR RUSAK VIEW ==========
+function showSensorRusakView(codenumber, alasan) {
+    const content = document.getElementById('kandangContent')
+    if (!content) return
+
+    const pesan = alasan === 'stuck'
+        ? 'Nilai suhu tidak berubah sama sekali (stuck) selama 10 data terakhir.'
+        : 'Nilai suhu melonjak naik-turun drastis dan tidak wajar selama 10 data terakhir.'
+
+    content.innerHTML = `
+        <div class="col-span-full flex items-center justify-center min-h-[60vh] p-6">
+            <div class="text-center max-w-md">
+                <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-microchip text-red-500 text-3xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800 mb-3">⚠️ Sensor Kemungkinan Rusak</h1>
+                <p class="text-gray-500 text-sm mb-6">Kandang ${codenumber}: ${pesan}</p>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-left">
+                    <p class="text-xs font-semibold text-amber-700 mb-2">
+                        <i class="fa-solid fa-lightbulb mr-1"></i> Saran Perbaikan:
+                    </p>
+                    <ul class="text-xs text-gray-600 space-y-1.5">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-screwdriver-wrench text-amber-500 mt-0.5"></i>
+                            <span>Periksa fisik sensor Suhu di kandang ${codenumber}</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-plug-circle-bolt text-amber-500 mt-0.5"></i>
+                            <span>Cek kabel/koneksi sensor ke MCU</span>
+                        </li>
+                    </ul>
+                </div>
+                <button onclick="location.reload()"
+                    class="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-md">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>Coba Lagi</span>
+                </button>
+            </div>
+        </div>`
+}
+
 // ========== INIT — dipanggil pertama kali oleh suhu-main.js ==========
 async function initSuhuData() {
     const ok = await fetchAllLatest()
@@ -350,6 +461,7 @@ async function initSuhuData() {
 window.SuhuData = {
     KONFIGURASI_SUHU,
     kandangSuhuData,
+    kandangSuhuBuffer,
     kandangSettings,
     kandangLatest,
     allCodenumbers,
@@ -363,7 +475,12 @@ window.SuhuData = {
     getAvailableKandangIds,
     getJumlahKandang,
     isOffline,
+    pushToBuffer,                // <-- BARU
+    isSensorStuck,                // <-- BARU
+    isSensorErratic,              // <-- BARU
+    checkSensorRusak,             // <-- BARU
     showGuestView,
     showOfflineView,
+    showSensorRusakView,
     initSuhuData,
 }
